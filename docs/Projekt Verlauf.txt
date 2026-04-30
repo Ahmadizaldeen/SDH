@@ -1,0 +1,6 @@
+30.04.2026
+- Erstellen das Use-Case Diagramm.
+- Akteur definieren , Attribute zuweissen (Gast, user, Admin)
+- Daten Struktur Design : Attribute aus die Use-Cases in Tabellen zuordnen + Normalizirung
+- UML-Klassen Diagramm vollständigen (Assoziation,Kardinalität)
+- SQL-Schema auf profissional-Nivue schreiben
