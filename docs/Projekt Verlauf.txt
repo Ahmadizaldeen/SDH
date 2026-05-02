@@ -4,3 +4,24 @@
 - Daten Struktur Design : Attribute aus die Use-Cases in Tabellen zuordnen + Normalizirung
 - UML-Klassen Diagramm vollständigen (Assoziation,Kardinalität)
 - SQL-Schema auf profissional-Nivue schreiben
+
+02-05
+Nutzung von header(wann kann ich msg in register seite zeigen und wann in mein seite)
+base_url.php : einheitliche verbendung und URLs
+chk_session : simple prüft gestarte Session, und start es wenn nötig
+msg.php : massage händler , über Session gesteuert
+validation.php : handleRegisterRequest()- XSS schütz, RegEx Regelen , Controll-Managment,
+                 Session Data, Redirect
+navigation.php : simple (register.php,start.php)
+register.php : HTML form als Template
+start.php : als Test gedacht,  msg zeiger, Objekt Erstellen, Debugs, Insert steruern 
+Person.php : private Attribute, setter, getter, Active Record, Insert_Update_delete,
+             automatische Einsetung von user_name, id, noch nicht vollständigen ,
+             aber alle impliementere Funktionen sind Fähig.
+Erfolg : Anmeldung über Register Formular, input validation, Error-done/massages in Session,
+        Verbindung zu DB, CURD Funktionen, Klasse Person mit Logischem Funktionen (erstellung UNI user_name pro person),
+
+Misserfolg: Person Klasse viel Großer als gedacht(viele offnen Funktionen), validation Ablauf nicht vorab geplant(dadurch stand große Aufwand),
+            DB CURD Funktionen sind nicht einheitlich (viele Wiederholung in Code noch zu erwarten)
+            Fehler aus PDO nicht betrachtet
+            
