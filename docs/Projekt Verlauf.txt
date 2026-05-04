@@ -24,4 +24,23 @@ Erfolg : Anmeldung über Register Formular, input validation, Error-done/massage
 Misserfolg: Person Klasse viel Großer als gedacht(viele offnen Funktionen), validation Ablauf nicht vorab geplant(dadurch stand große Aufwand),
             DB CURD Funktionen sind nicht einheitlich (viele Wiederholung in Code noch zu erwarten)
             Fehler aus PDO nicht betrachtet
+
+04-05 
+Person.php : $id zuweissen auf DB, $person beim instziieren in db speichern (insert Method in der Constracter aufrufen)
+db_conn.php : um bauen in Funktion zweck debug -> $db als PDO return oder false (gab Problem mit require , $db manschnal undefient) 
+funktion/register.php :auf Register Form ruft handleRegisterRequest() -> validation und clean,
+                 Set Session Person_date und gibt es als parameter an Person.klass -> Objekt instanieren(automatisch in DB speichern),
+                 funktion setUserName() genieriert user_name anhand die vor/nachname _ id -> header
+Template/login : simple
+pages/login : $db = db() aus db_conn, $user = login($db) aus /Funktion/login
+add Funktionen/login.php : POST_validiern und cleanen, prepare stmt (email OR user_name)
+                         fetch Userdate (SELECT *) password verifizieren, Login_Data in Session speichern
+Template/logout : logout simple form mit bestätigung
+funktion/logout : abmeldung und Session löschen
+pages/home.php : noch leer , für Debug und msg
+
+Misserfolg:   msg Vewalung noch unstabil (kompliziert) fehler fähig, keine logout_bestätigung msg möglich nach session_destroy();
+
+
+
             
