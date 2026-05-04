@@ -1,20 +1,38 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sdh";
+require_once __DIR__ ."/../../include/debug.php";
 
-try {
-    $dsn = "mysql:host=$servername;dbname=$dbname";
-    $db = new PDO($dsn, $username, $password);
-    // set the PDO error mode to exception
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-	$db->query("SET NAMES utf8mb4");
-    #var_dump($db);
-} 
-catch (PDOException $e) {
-    echo  $e->getMessage();
+function db(){
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "sdh";
+
+    try {
+        $dsn = "mysql:host=$servername;dbname=$dbname;charset=utf8mb4";
+        $db = new PDO($dsn, $username, $password);
+
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        return $db;
+    } 
+    catch (PDOException $e) {
+        die($e->getMessage());
+    }
 }
 
+$db = db();
+/*
+try {
+    $stmt = $db->query("SELECT NOW()");
+    $result = $stmt->fetch();
+    dd($result);
+} catch (Exception $e) {
+    dd($e->getMessage());
+}
+
+var_dump($result);
+$db = db();
+var_dump($db);
+*/
 ?>
