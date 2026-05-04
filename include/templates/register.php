@@ -1,7 +1,4 @@
-<?php
-require_once __DIR__ ."/../../include/funktionen/validation.php";
-require_once __DIR__ . "/navigation.php";
-?>
+
 
 <form action="" method ="post">
     	
