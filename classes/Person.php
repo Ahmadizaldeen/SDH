@@ -30,7 +30,7 @@ class Person
 			
 		}
 		$this->db = $db;
-		#$this->insert(); //speiecht in DB wenn Objekt erstellt wird
+		$this->insert(); //speiecht in DB wenn Objekt erstellt wird
 	}
 
 	# Setter / Getter
@@ -40,6 +40,7 @@ class Person
 		$stmt = $this->db->prepare($sql);
 		$stmt->bindValue(':email', $email, PDO::PARAM_STR);
 		$stmt->execute();
+		$this->id = $stmt->fetchColumn();
 		return ($stmt->fetchColumn());
 	}
 	function setUserName()
@@ -101,17 +102,6 @@ class Person
 		//adresse Formular
 	}
 
-	
-	
-	
-	
-	
-
-	
-
-	
-
-
 
 	# Zugriff auf db insert, select, delete, update, login_Methoden ->(selectAll, vergleichen, )
 	function insert()
@@ -154,5 +144,11 @@ class Person
 
 }
 
-
+/*
+$person->setPhone("123-456-789");
+$_SESSION['person_data']['phone'] = $person->getPhone();
+#$person->insert();
+$person->setUserName();
+$_SESSION['person_data']['user_name'] = $person->getUserName();
+**/
 ?>
