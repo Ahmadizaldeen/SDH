@@ -5,36 +5,7 @@ require_once __DIR__."/../debug.php";
 require_once __DIR__."/msg.php";
 
 
-function handleRegisterRequest(){
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        
-        $vorname = valid_name($_POST["vorname"]);
-        $nachname = valid_name($_POST["nachname"]);
-        $password = valid_password($_POST["password"], $_POST["confirm_password"]);
-        $email= valid_email($_POST["email"]);
-        if (!$vorname || !$nachname || !$email || !$password) {
-            msg();
-            return;
-        }
-        if(isset($_POST["phone"])){
-            $phone = clean_input($_POST["phone"]);
-            $_SESSION['person_data']['phone'] =$phone;
-        }
-        if(isset($_POST["alias"])){
-            $alias = clean_input($_POST["alias"]);
-            $_SESSION['person_data']['alias'] =$alias;
-        }
-		$_SESSION['person_data']['vorname'] = $vorname;
-        $_SESSION['person_data']['nachname'] = $nachname;
-        $_SESSION['person_data']['email'] = $email;
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $_SESSION['person_data']['password'] = $password;
-        $url = BASE_URL . "/start.php";
-		header("Location: $url");
-        $_SESSION['msg']['done'][] = "Registrierung erfolgreich! Willkommen " . ($alias ? $alias : $vorname) . "!";
-		exit;
-    }
-}	
+
 function clean_input($data){
     return htmlspecialchars(strip_tags(trim($data)));
 }
@@ -84,6 +55,6 @@ function valid_email($email){
     else{return $email;}
     
 }
-handleRegisterRequest();
+
 
 ?>
