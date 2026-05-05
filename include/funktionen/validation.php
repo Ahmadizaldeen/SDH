@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__."/../../config/chk_session.php";
+#require_once __DIR__."/../../config/chk_session.php";
 require_once __DIR__."/../../config/base_url.php";
-require_once __DIR__."/../debug.php";
-require_once __DIR__."/msg.php";
+#require_once __DIR__."/../debug.php";
+#require_once __DIR__."/msg.php";
 
 
 

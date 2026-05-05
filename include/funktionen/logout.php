@@ -1,6 +1,5 @@
 
 <?php
-require_once __DIR__ ."/../../config/chk_session.php";
 require_once __DIR__ ."/../../config/base_url.php";
 
 

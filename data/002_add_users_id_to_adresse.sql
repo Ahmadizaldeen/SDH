@@ -1,0 +1,7 @@
+USE sdh;
+ALTER TABLE adresse ADD COLUMN user_id INT UNSIGNED;
+ALTER TABLE adresse 
+ADD CONSTRAINT fk_adresse_user 
+FOREIGN KEY (user_id) 
+REFERENCES users(id)
+ON DELETE CASCADE;

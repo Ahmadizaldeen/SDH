@@ -1,9 +1,7 @@
 <?php
 require_once __DIR__ . "/../../config/base_url.php";
-require_once __DIR__ . "/../../config/chk_session.php";
-require_once __DIR__ . "/../../include/debug.php";
-require_once __DIR__ . "/../../include/funktionen/msg.php";
 require_once __DIR__ . "/../../include/funktionen/validation.php";
+require_once __DIR__ . "/../../classes/Adress.php";
 
 function login(PDO $db)
 {
@@ -50,7 +48,19 @@ function login(PDO $db)
     ];
 
     $_SESSION['msg']['done']['eingelogt'] = "Login erfolgreich!";
-    header("Location: " . BASE_URL . "/pages/home.php");
+    #header("Location: " . BASE_URL . "/pages/home.php");
+    $_SESSION['login_data']['adresse'] = Adress::getAdresseByUserID($db,$_SESSION['login_data']['id']);
+    #dd($adress);
+    if (!$_SESSION['login_data']['adresse']['id']) {
+
+        header("Location: " . BASE_URL . "/include/templates/adresse_form.php");
+       
+    }
+    else {
+        header("Location: " . BASE_URL . "/pages/home.php");
+        
+    }
+
     return $user;
     
 }

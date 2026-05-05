@@ -1,10 +1,6 @@
 <?php
-require_once __DIR__."/../../config/chk_session.php";
 require_once __DIR__."/../../config/base_url.php";
-require_once __DIR__."/../debug.php";
-require_once __DIR__."/msg.php";
 require_once __DIR__."/validation.php";
-
 require_once __DIR__ ."/../../classes/Person.php";
 
 function handleRegisterRequest(){
@@ -36,10 +32,10 @@ function handleRegisterRequest(){
     $password = password_hash($password, PASSWORD_DEFAULT);
     $_SESSION['person_data']['password'] = $password;
 
-    require_once __DIR__ ."/../../config/db/db_conn.php";
     #dd($db);
     $db = db();
     $person_data = $_SESSION['person_data'];
+    #dd($person_data);
     $person = new Person($db,$person_data);
     $person->setUserName();
     #$_SESSION['person_data']['user_name']
