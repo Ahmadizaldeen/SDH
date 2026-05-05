@@ -1,9 +1,13 @@
 <?php
-require_once __DIR__ . "/../config/chk_session.php";
-require_once __DIR__ . "/../include/funktionen/msg.php";
+require_once __DIR__ . "/../config/base_url.php";
 require_once __DIR__ . "/../include/templates/navigation.php";
-require_once __DIR__ . "/../include/debug.php";
+require_once __DIR__ ."/../include/funktionen/adresse.php";
+
 #dd($_SESSION);
+#dd(BASE_URL);
+//adresse Form anzeigen falls noch kein Adrese gespeichert.
+
+
 echo "<h1>Student Development House</h1>";
 $msg_eingelogt = $_SESSION['msg']['done']['eingelogt'] ?? '';
 ok_msg($msg_eingelogt);

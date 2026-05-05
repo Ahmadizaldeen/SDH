@@ -35,6 +35,9 @@ $_SESSION['person_data']['user_name'] = $person->getUserName();
 #unset($_SESSION['person_data']['plz']);
 */
 echo "<h1>Start.php</h1><br><hr>";
+
+#dd($adresse);
+
 #msg();
 #dd($_SESSION);
 ?>
