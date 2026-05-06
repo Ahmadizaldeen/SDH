@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS laender (
 -- ------------------------------------------------------------
 -- Tabelle: adresse
 -- Gemeinsame Adressdaten für users und Standorte
+-- Migration Script 002_ add user_id
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS adresse (
     id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
