@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__ . "/../config/base_url.php";
-#require_once __DIR__ . "/../config/db/db_conn.php";
-require_once __DIR__ ."/abstract/aDatabank.php";
+namespace Classes;
+use Classes\Abstract\aDatabank;
+use Session\SessionController;
+require_once __DIR__ . "/../config/bootstrap.php";
+
 
 class Person extends aDatabank
 {
@@ -21,84 +23,143 @@ class Person extends aDatabank
 
 
 	# Methoden
-	public function __construct(PDO $db,array $daten = [])
+	public function __construct(array $daten = [])
 	{
-		foreach ($daten as $key => $value) {
-			$this->$key = $value;
-			
-		}
+		$this->set_daten($daten);
 		$this->db = $this->db(); // Verbindung zu DB geerbt von aDatabank
-		$this->insert(); //speiecht in DB wenn Objekt erstellt wird
+
 	}
 
-		function insert()
+	function insert()
 	{
-		$sql = "INSERT INTO users(vorname, nachname, email,phone, password,alias) 
-				VALUES 
-				(
-					'$this->vorname',
-					'$this->nachname',
-					'$this->email',
-					'$this->phone',
-					'$this->password',
-					'$this->alias'			
-					
-				)";
-		
-		$this->db->exec($sql);
-		
-	
-	
+		$sql = "INSERT INTO users (vorname, nachname, email, phone, password, alias)
+        VALUES (:vorname, :nachname, :email, :phone, :password, :alias)";
+
+		$stmt = $this->db->prepare($sql);
+#dd($this->password);
+#':password' => password_hash($this->password, PASSWORD_DEFAULT),
+		$stmt->execute([
+			':vorname' => $this->vorname,
+			':nachname' => $this->nachname,
+			':email' => $this->email,
+			':phone' => $this->phone,
+			':password' => ($this->password),
+			':alias' => $this->alias
+		]);
+
+
+
 		$_SESSION['msg']['done'][] = "daten in DB gespeichert";
 	}
 	# Setter / Getter
-	
+
 	function setUserName()
 	{
-		$this->user_name = strtolower($this->vorname . "_" . $this->nachname."".$this->db->lastInsertID());
+		$this->user_name = strtolower($this->vorname . "_" . $this->nachname . "" . $this->db->lastInsertID());
 		$sql = "UPDATE users SET user_name = :user_name WHERE email = :email";
 		$stmt = $this->db->prepare($sql);
-		$stmt->bindValue(':user_name', $this->user_name, PDO::PARAM_STR);
-		$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+		$stmt->bindValue(':user_name', $this->user_name, \PDO::PARAM_STR);
+		$stmt->bindValue(':email', $this->email, \PDO::PARAM_STR);
 		$stmt->execute();
 	}
+	function set_daten($daten)
+	{
+		foreach ($daten as $key => $value) {
+			$setter = "set" . ucfirst($key);
+			if (method_exists($this, $setter))
+				$this->$setter($value);
+		}
+	}
+
+	public function getProperty(string $property) // getter für alle Eigenschaften. 
+	{
+		if (!property_exists($this, $property)) {
+			return "Property $property existiert nicht.";
+		}
+
+		return $this->$property;
+	}
 
 
-	function getUserName()
+
+
+	function select($id)
 	{
-		return $this->user_name;
+		$sql = "SELECT * FROM users WHERE id = :id LIMIT 1";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+		$stmt->execute();
+
+		$result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+		if ($result) {
+			$this->set_daten($result);
+			return $result;
+		}
+
+		return null;
 	}
-	function getEmail()// 
+
+	function delete($id)
 	{
-		return $this->email;
+		$sql = "DELETE FROM users WHERE id = :id";
+		$stmt = $this->db->prepare($sql);
+		$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+		return $stmt->execute();
 	}
+	function update($id)
+	{
+		$sql = "UPDATE users 
+            SET vorname = :vorname,
+                nachname = :nachname,
+                email = :email,
+                phone = :phone,
+                alias = :alias
+            WHERE id = :id";
+
+		$stmt = $this->db->prepare($sql);
+
+		return $stmt->execute([
+			':vorname' => $this->vorname,
+			':nachname' => $this->nachname,
+			':email' => $this->email,
+			':phone' => $this->phone,
+			':alias' => $this->alias,
+			':id' => $id
+		]);
+	}
+	function selectAll()
+	{
+		$sql = "SELECT * FROM users";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute();
+
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
+
 	function setEmail($param) // 
 	{
 		$this->email = $param;
 	}
 
-	function getVorname()
-	{
-		return $this->vorname;
-	}
+
 
 	function setVorname($param)
 	{
 		$this->vorname = $param;
+	}
+	function setNachname($param)
+	{
+		$this->nachname = $param;
 	}
 	function setAlias($param) //
 	{
 		$this->alias = $param;
 	}
 
-	function getAlias() // 
-	{
-		return $this->alias;
-	}
-	function getPhone()
-	{
-		return $this->phone;
-	}
+
 
 	function setPhone($param)
 	{
@@ -117,24 +178,9 @@ class Person extends aDatabank
 	{
 		return get_object_vars($this);
 	}
-
-	function select( $id)
-	{
+	public function setPassword($param){
+		$this->password =$param;
 	}
-	function delete( $id)
-	{
-		$sql = "DELETE FROM personen WHERE id = $id";
-		
-	}
-	function update( $id)
-	{
-	}
-	function selectAll()
-	{
-	}
-	
-
 }
-
 
 ?>
