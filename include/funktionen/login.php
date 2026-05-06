@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../config/base_url.php";
-require_once __DIR__ . "/../../include/funktionen/validation.php";
-require_once __DIR__ . "/../../classes/Adress.php";
+require_once __DIR__ . "/../../config/bootstrap.php";
+require_once __DIR__ . "/validation.php";
+use Classes\Adress;
 
 function login(PDO $db)
 {
@@ -49,8 +49,11 @@ function login(PDO $db)
 
     $_SESSION['msg']['done']['eingelogt'] = "Login erfolgreich!";
     #header("Location: " . BASE_URL . "/pages/home.php");
-    $_SESSION['login_data']['adresse'] = Adress::getAdresseByUserID($db,$_SESSION['login_data']['id']);
-    #dd($adress);
+    $adress = new Adress();
+
+    $_SESSION['login_data']['adresse'] = $adress-> getUserAdress($_SESSION['login_data']['id']);
+    #dd($_SESSION['login_data']['id']);
+    #dd($_SESSION['login_data']['adresse']);
     if (!$_SESSION['login_data']['adresse']['id']) {
 
         header("Location: " . BASE_URL . "/include/templates/adresse_form.php");

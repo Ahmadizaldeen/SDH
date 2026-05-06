@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../config/base_url.php";
-require_once __DIR__ ."/../../classes/Adress.php";
+require_once __DIR__ . "/../../config/bootstrap.php";
+use Classes\Adress;
 
 //Login-Status speichern nach erfolgreichem Login
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $adress = new Adress($acc_adresse);
         $adress->insert();
-        $_SESSION['login_data']['adresse'] = Adress::getAdresseByUserID($db,$_SESSION['login_data']['id']);
+        $_SESSION['login_data']['adresse'] = $adress->getAdresseByUserID($_SESSION['login_data']['id']);
 
         header("Location: " . BASE_URL . "/pages/home.php");
         exit;
