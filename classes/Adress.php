@@ -1,6 +1,9 @@
 <?php
-require_once __DIR__ . "/../config/base_url.php";
-require_once __DIR__ . "/abstract/aDatabank.php";
+namespace Classes;
+use Classes\Abstract\aDatabank;
+use Classes\SessionController;
+#require_once __DIR__ . "/../Session/SessionController.php";
+require_once __DIR__ . "/../config/bootstrap.php";
 
 class Adress extends aDatabank
 {
@@ -17,107 +20,155 @@ class Adress extends aDatabank
 	# Methoden
 	public function __construct(array $daten = [])
 	{
-		foreach ($daten as $key => $value) {
-			$this->$key = $value;
-			
-		}
+		#dd($daten);
+		$this->set_daten($daten);
 		$this->db = $this->db(); // Verbindung zu DB geerbt von aDatabank
-	
+
+	}
+	function set_daten($daten) //key muss gleich wie attribute_name sein, value kommt per $_POST 
+	{
+		foreach ($daten as $key => $value) {
+			$setter = "set" . ucfirst($key);
+			if (method_exists($this, $setter))
+				$this->$setter($value);
+		}
+	}
+
+	public function getProperty(string $property) // getter für alle Eigenschaften. 
+	{
+		if (!property_exists($this, $property)) {
+			SessionController::addMessage("error", "Property $property existiert nicht.");
+			return "Property $property existiert nicht.";
+		}
+
+		return $this->$property;
 	}
 
 	public function insert()
 	{
-		$sql = "INSERT INTO adresse (strasse, haus_nr, plz,stadt, user_id) 
-				VALUES 
-				(
-					'$this->strasse',
-					'$this->haus_nr',
-					'$this->plz',
-					'$this->stadt',
-					'$this->user_id'
-					
-				)";
-	
-		$this->db->exec($sql);
+		$sql = "INSERT INTO adresse (strasse, haus_nr, plz, stadt, user_id)
+        VALUES (:strasse, :haus_nr, :plz, :stadt, :user_id)";
 
-		$_SESSION['msg']['done'][] = "Adresse daten in DB gespeichert";
+		$stmt = $this->db->prepare($sql);
+		#dd($sql);
+		$stmt->execute([
+			':strasse' => $this->strasse,
+			':haus_nr' => $this->haus_nr,
+			':plz' => $this->plz,
+			':stadt' => $this->stadt,
+			':user_id' => $this->user_id
+		]);
+
+		SessionController::addMessage("done", "Adresse daten in DB gespeichert");
 	}
 
-	public static function getAdresseByUserID($db,$user_id){ // wird zum prüfen des Adresse bei login
-		$stmt = $db->prepare("SELECT * FROM adresse WHERE user_id = :id");
-		$stmt->execute(['id' => $user_id]);
-		$adresse = $stmt->fetch();
-        return $adresse;
-	}
+		public function getUserAdress(int $user_id): ?array
+{
+    $stmt = $this->db->prepare("SELECT * FROM adresse WHERE user_id = :id");
+    $stmt->execute(['id' => $user_id]);
 
-	
+    $result = $stmt->fetch();
+    return $result ?: null;
+}
+	public function getByUserId(int $user_id): ?array
+{
+    $stmt = $this->db->prepare("SELECT * FROM adresse WHERE user_id = :id");
+    $stmt->execute(['id' => $user_id]);
 
-	function select( $id)
+    $result = $stmt->fetch();
+    return $result ?: null;
+}
+
+	function select($id)
 	{
+		$sql = "SELECT * FROM adresse WHERE id = :id";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([':id' => $id]);
+
+		$result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+		if (!$result) {
+			SessionController::addMessage("error", "Adresse nicht gefunden");
+			return null;
+		}
+
+		$this->set_daten($result);
+		return $result;
 	}
-	function delete( $id)
+	function delete($id)
 	{
-		$sql = "DELETE FROM personen WHERE id = $id";
-		
+		$sql = "DELETE FROM adresse WHERE id = :id";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute([':id' => $id]);
+
 	}
-	function update( $id)
+	function update($id)
 	{
+		$sql = "UPDATE adresse 
+            SET strasse = :strasse,
+                haus_nr = :haus_nr,
+                plz = :plz,
+                stadt = :stadt,
+                user_id = :user_id
+            WHERE id = :id";
+
+		$stmt = $this->db->prepare($sql);
+
+		$stmt->execute([
+			':strasse' => $this->strasse,
+			':haus_nr' => $this->haus_nr,
+			':plz' => $this->plz,
+			':stadt' => $this->stadt,
+			':user_id' => $this->user_id,
+			':id' => $id
+		]);
+
+		SessionController::addMessage("done", "Adresse aktualisiert");
 	}
 	function selectAll()
 	{
+		$sql = "SELECT * FROM adresse";
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute();
+
+		$results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+		return $results ?: [];
 	}
-	
+
+	public function getAdresseByUserID( int $user_id)
+	{ // wird zum prüfen des Adresse bei login
+		$stmt = $this->db->prepare("SELECT * FROM adresse WHERE user_id = :id");
+		$stmt->execute(['id' => $user_id]);
+		$adresse = $stmt->fetch();
+		return $adresse;
+	}
+
 	# Setter / Getter
-	function getStrasse()
-	{
-		
-	}
-	function setStrasse($param){
 
-	}
-	function getHausNr()// 
+	function setStrasse($param)
 	{
-	}
-	function setHausNr($param) // 
-	{
+		$this->strasse = $param;
 	}
 
-	function getPlz()
+	function setHaus_nr($param) // 
 	{
+		$this->haus_nr = $param;
 	}
 
 	function setPlz($param)
 	{
+		
+		$this->plz = $param;
 	}
 	function setStadt($param) //
 	{
+		$this->stadt = $param;
 	}
-
-	function getStadt() // 
+	function SetUser_id($user_id)
 	{
+		$this->user_id = $user_id;
 	}
-	function getUserByID()
-	{
-	}
-
-	function getLandByID($param)
-	{
-	}
-
-
-	
-	
-
-
-	
-	public function getAttributes()
-	{
-		return get_object_vars($this);
-	}
-
-
 
 }
-
-
 ?>

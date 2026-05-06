@@ -1,10 +1,11 @@
 <?php
-interface iDatenbank{ # nur abstrakter Methoden
-	function insert();# instanz die Klasse pdo
-	function select( $id);
-	function delete( $id);
+namespace Classes\Abstract;
+interface iDatabank
+{ // nur abstrakte Methoden
+	function insert(); // Instanz der Klasse pdo
+	function select($id);
+	function delete($id);
 	function update($id);
-	function selectAll( );
-	
+	function selectAll();
 }
 ?>
