@@ -1,6 +1,6 @@
 USE sdh;
 
-ALTER TABLE nachrichten DROP INDEX fk_nachricht_status;
+ALTER TABLE nachrichten DROP FOREIGN KEY fk_nachricht_status;
 
 ALTER TABLE seminare DROP FOREIGN KEY fk_seminar_status;
 
