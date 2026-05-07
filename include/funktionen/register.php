@@ -7,23 +7,22 @@ function handleRegisterRequest(){
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return;
     }
-
-        
+ 
     $vorname = valid_name($_POST["vorname"]);
     $nachname = valid_name($_POST["nachname"]);
     $password = valid_password($_POST["password"], $_POST["confirm_password"]);
     $email= valid_email($_POST["email"]);
     if (!$vorname || !$nachname || !$email || !$password) {
-        msg();
         return;
     }
-    if(isset($_POST["phone"])){
+    $alias = '';
+    if (isset($_POST["phone"])) {
         $phone = clean_input($_POST["phone"]);
-        $_SESSION['person_data']['phone'] =$phone;
+        $_SESSION['person_data']['phone'] = $phone;
     }
-    if(isset($_POST["alias"])){
+    if (isset($_POST["alias"])) {
         $alias = clean_input($_POST["alias"]);
-        $_SESSION['person_data']['alias'] =$alias;
+        $_SESSION['person_data']['alias'] = $alias;
     }
     $_SESSION['person_data']['vorname'] = $vorname;
     $_SESSION['person_data']['nachname'] = $nachname;
@@ -41,10 +40,11 @@ function handleRegisterRequest(){
     #$_SESSION['person_data']['user_name']
     #$_SESSION['person_data']['user_name'] =$person->getUserName();
 
+    $welcomeName = $alias !== '' ? $alias : $vorname;
+    $_SESSION['msg']['done']['register_msg'] = "Registrierung erfolgreich! Willkommen " . $welcomeName . "!";
     $url = BASE_URL . "/pages/login.php";
     header("Location: $url");
-    $_SESSION['msg']['done']['register_msg'] = "Registrierung erfolgreich! Willkommen ". ($alias ? $alias : $vorname) . "!,<br>" ;
     exit;
 }
-handleRegisterRequest();	
+
 ?>

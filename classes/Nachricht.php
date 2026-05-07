@@ -7,6 +7,7 @@ require_once __DIR__ . "/../config/bootstrap.php";
 
 class Nachricht extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $user_id;//
@@ -19,7 +20,7 @@ class Nachricht extends aDatabank
 
 
 	# Methoden
-	public function __construct(\PDO $db, array $daten = [])
+	public function __construct( array $daten = [])
 	{
 		foreach ($daten as $key => $value) {
 			$this->$key = $value;

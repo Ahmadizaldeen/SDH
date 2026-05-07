@@ -2,9 +2,6 @@
 require_once __DIR__ . "/../../config/bootstrap.php";
 use Classes\Adress;
 
-//Login-Status speichern nach erfolgreichem Login
-
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -15,9 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
    
     if (isset($_POST['save'])) {
-        echo $_POST['strasse'];
-        echo $_SESSION['login_data']["id"];
-        $acc_adresse =[// wichtig für der construct.
+        $acc_adresse = [// wichtig für der construct.
             'strasse' => $_POST['strasse'],
             'haus_nr' => $_POST['haus_nr'],
             'plz' => $_POST['plz'],
@@ -26,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $adress = new Adress($acc_adresse);
         $adress->insert();
+        //prüfen ob ein Adresse für der Benutzer vohanden.(ja)=>skip Adresse Form in login-in 
         $_SESSION['login_data']['adresse'] = $adress->getAdresseByUserID($_SESSION['login_data']['id']);
 
         header("Location: " . BASE_URL . "/pages/home.php");

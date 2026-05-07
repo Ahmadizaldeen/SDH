@@ -7,6 +7,7 @@ require_once __DIR__ . "/../config/bootstrap.php";
 
 class Fachbereiche extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $name;//
@@ -15,7 +16,7 @@ class Fachbereiche extends aDatabank
 
 
 	# Methoden
-	public function __construct(\PDO $db, array $daten = [])
+	public function __construct( array $daten = [])
 	{
 		foreach ($daten as $key => $value) {
 			$this->$key = $value;
@@ -111,29 +112,26 @@ class Fachbereiche extends aDatabank
 	# Setter / Getter
 	function getID()
 	{
-		#return $this->strasse;
+		return $this->id;
 	}
-	function setID($param)
-	{
-
-	}
+	
 	function getName()// 
 	{
-		#return $this->email;
+		return $this->name;
 	}
 	function setName($param) // 
 	{
-		#$this->email = $param;
+		$this->name = $param;
 	}
 
 	function getDescription()
 	{
-		#return $this->vorname;
+		return $this->description;
 	}
 
 	function setDescription($param)
 	{
-		#$this->vorname = $param;
+		$this->description = $param;
 	}
 
 

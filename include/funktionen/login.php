@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../../config/bootstrap.php";
 require_once __DIR__ . "/validation.php";
 use Classes\Adress;
+use Classes\Person;
 
 function login(PDO $db)
 {
@@ -46,7 +47,7 @@ function login(PDO $db)
     'alias' => $user['alias'],
     'eingelogt' => true
     ];
-
+Person::setUser($_SESSION['login_data']);
     $_SESSION['msg']['done']['eingelogt'] = "Login erfolgreich!";
     #header("Location: " . BASE_URL . "/pages/home.php");
     $adress = new Adress();
@@ -56,7 +57,7 @@ function login(PDO $db)
     #dd($_SESSION['login_data']['adresse']);
     if (!$_SESSION['login_data']['adresse']['id']) {
 
-        header("Location: " . BASE_URL . "/include/templates/adresse_form.php");
+        header("Location: " . BASE_URL . "/pages/adresse.php");
        
     }
     else {
@@ -67,10 +68,6 @@ function login(PDO $db)
     return $user;
     
 }
-$reg_msg= ($_SESSION['msg']['done']['register_msg']) ?? '';
-if(isset($_SESSION['msg']['done']['register_msg']))
-    ok_msg($reg_msg);
-#$user = login( $db );
 
 ?>
 

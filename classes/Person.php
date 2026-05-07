@@ -1,12 +1,12 @@
 <?php
 namespace Classes;
 use Classes\Abstract\aDatabank;
-use Session\SessionController;
 require_once __DIR__ . "/../config/bootstrap.php";
 
 
 class Person extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//Auto_increment, zuordung über email getIDbyEmail
 	private $vorname;//pflicht

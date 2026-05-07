@@ -7,6 +7,7 @@ require_once __DIR__ . "/../config/bootstrap.php";
 
 class Raum extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $name;//
@@ -16,7 +17,7 @@ class Raum extends aDatabank
 
 
 	# Methoden
-	public function __construct(\PDO $db, array $daten = [])
+	public function __construct( array $daten = [])
 	{
 		$this->set_daten($daten);
 		$this->db = $this->db(); // Verbindung zu DB geerbt von aDatabank
