@@ -1,31 +1,29 @@
 <?php
 namespace Classes;
 use Classes\Abstract\aDatabank;
-use Session\SessionController;
+
 require_once __DIR__ . "/../config/bootstrap.php";
 
 
 class Seminar extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $title;//
-	private $raum_id;//
-	private $status_id;// 
-	private $lfacbereich_id;// 
+	private $facbereich_id;// 
 	private $beschreibung;//
-
 	private $min_teilnehmer;//
 	private $max_teilnehmer;//
+	private $raum_id;//
 	private $bild;//
 	private $preis;//
-	private $start_datum;//
-	private $end_datum;//
+	private $status;// 
 	private $db; //
 
 
 	# Methoden
-	public function __construct(\PDO $db, array $daten = [])
+	public function __construct( array $daten = [])
 	{
 		$this->set_daten($daten);
 		$this->db = $this->db(); // Verbindung zu DB geerbt von aDatabank
@@ -50,24 +48,18 @@ class Seminar extends aDatabank
 	function insert()
 	{
 		$sql = "INSERT INTO seminare 
-            (title, raum_id, status_id, lfacbereich_id, beschreibung, min_teilnehmer, max_teilnehmer, bild, preis, start_datum, end_datum)
+            (title, status, fachbereich_id, beschreibung, preis)
             VALUES 
-            (:title, :raum_id, :status_id, :lfacbereich_id, :beschreibung, :min_teilnehmer, :max_teilnehmer, :bild, :preis, :start_datum, :end_datum)";
+            (:title, :status, :facbereich_id, :beschreibung, :preis)";
 
 		$stmt = $this->db->prepare($sql);
 
 		$stmt->execute([
 			':title' => $this->title,
-			':raum_id' => $this->raum_id,
-			':status_id' => $this->status_id,
-			':lfacbereich_id' => $this->lfacbereich_id,
+			':status' => $this->status,
+			':facbereich_id' => $this->facbereich_id,
 			':beschreibung' => $this->beschreibung,
-			':min_teilnehmer' => $this->min_teilnehmer,
-			':max_teilnehmer' => $this->max_teilnehmer,
-			':bild' => $this->bild,
-			':preis' => $this->preis,
-			':start_datum' => $this->start_datum,
-			':end_datum' => $this->end_datum
+			':preis' => $this->preis
 		]);
 
 		$_SESSION['msg']['done'][] = "Seminar gespeichert";
@@ -101,32 +93,20 @@ class Seminar extends aDatabank
 	{
 		$sql = "UPDATE seminare SET
                 title = :title,
-                raum_id = :raum_id,
-                status_id = :status_id,
-                lfacbereich_id = :lfacbereich_id,
+                status = :status,
+                fachbereich_id = :facbereich_id,
                 beschreibung = :beschreibung,
-                min_teilnehmer = :min_teilnehmer,
-                max_teilnehmer = :max_teilnehmer,
-                bild = :bild,
-                preis = :preis,
-                start_datum = :start_datum,
-                end_datum = :end_datum
+                preis = :preis
             WHERE id = :id";
 
 		$stmt = $this->db->prepare($sql);
 
 		$stmt->execute([
 			':title' => $this->title,
-			':raum_id' => $this->raum_id,
-			':status_id' => $this->status_id,
-			':lfacbereich_id' => $this->lfacbereich_id,
+			':status' => $this->status,
+			':facbereich_id' => $this->facbereich_id,
 			':beschreibung' => $this->beschreibung,
-			':min_teilnehmer' => $this->min_teilnehmer,
-			':max_teilnehmer' => $this->max_teilnehmer,
-			':bild' => $this->bild,
 			':preis' => $this->preis,
-			':start_datum' => $this->start_datum,
-			':end_datum' => $this->end_datum,
 			':id' => $id
 		]);
 
@@ -134,57 +114,116 @@ class Seminar extends aDatabank
 	}
 	function selectAll()
 	{
-		$sql = "SELECT * FROM seminare ORDER BY start_datum ASC";
+		$sql = "SELECT * FROM seminare";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute();
 
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
+	public function getAllWithFachbereich(): array
+{
+    $sql = "
+        SELECT 
+            seminare.*,
+            fachbereiche.name AS fachbereich_name
+
+        FROM seminare
+
+        LEFT JOIN fachbereiche
+        ON seminare.fachbereich_id = fachbereiche.id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
+
+public function selectWithTermine(int $id): array
+{
+    $sql = "
+        SELECT 
+            seminare.*,
+            termine.id AS termin_id,
+            termine.beginn,
+            termine.ende,
+            termine.dauer,
+            standorte.name AS standort_name,
+            raeume.name AS raum_name,
+			fachbereiche.name AS fachbereich_name
+
+        FROM seminare
+
+        LEFT JOIN termine
+            ON termine.seminare_id = seminare.id
+
+        LEFT JOIN standorte
+            ON termine.standort_id = standorte.id
+
+        LEFT JOIN raeume
+            ON termine.raeume_id = raeume.id
+		
+		 JOIN fachbereiche
+        	ON seminare.fachbereich_id = fachbereiche.id
+
+        WHERE seminare.id = :id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+#dd($sql);
+    $stmt->execute([
+        'id' => $id
+    ]);
+
+    return $stmt->fetchAll();
+}
+
 	# Setter / Getter
-	function getStrasse()
+	function getTitle()
 	{
-		#return $this->strasse;
+		return $this->title;
 	}
-	function setStrasse($param)
+	function setTitle($param)
 	{
-
+		$this->title =$param;
 	}
-	function getHausNr()// 
+	function getFacbereich_id()// 
 	{
-		#return $this->email;
+		return $this->facbereich_id;
 	}
-	function setHausNr($param) // 
+	function setFacbereich_id($param) // 
 	{
-		#$this->email = $param;
-	}
-
-	function getPlz()
-	{
-		#return $this->vorname;
+		$this->facbereich_id = $param;
 	}
 
-	function setPlz($param)
+	function getBeschreibung()
 	{
-		#$this->vorname = $param;
-	}
-	function setStadt($param) //
-	{
-		#$this->alias = $param;
+		return $this->beschreibung;
 	}
 
-	function getStadt() // 
+	function setBeschreibung($param)
 	{
-		#return $this->alias;
+		$this->beschreibung = $param;
 	}
-	function getUserByID()
+	function setPreis($param) //
 	{
-		#return $this->phone;
+		$this->preis = $param;
 	}
 
-	function getLandByID($param)
+	function getPreis() // 
 	{
-		#$this->phone = $param;
+		return $this->preis;
+	}
+	function getStatus()
+	{
+		return $this->status;
+	}
+
+	function setStatus($param)
+	{
+		$this->status = $param;
 	}
 
 

@@ -1,12 +1,12 @@
 <?php
 namespace Classes;
 use Classes\Abstract\aDatabank;
-use Session\SessionController;
 require_once __DIR__ . "/../config/bootstrap.php";
 
 
 class Standort extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $name;//
@@ -16,7 +16,7 @@ class Standort extends aDatabank
 
 
 	# Methoden
-	public function __construct(\PDO $db, array $daten = [])
+	public function __construct( array $daten = [])
 	{
 		foreach ($daten as $key => $value) {
 			$this->$key = $value;

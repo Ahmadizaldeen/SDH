@@ -1,12 +1,12 @@
 <?php
 namespace Classes;
 use Classes\Abstract\aDatabank;
-use Classes\SessionController;
 #require_once __DIR__ . "/../Session/SessionController.php";
 require_once __DIR__ . "/../config/bootstrap.php";
 
 class Adress extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//Auto_increment
 	private $strasse;
@@ -37,7 +37,7 @@ class Adress extends aDatabank
 	public function getProperty(string $property) // getter für alle Eigenschaften. 
 	{
 		if (!property_exists($this, $property)) {
-			SessionController::addMessage("error", "Property $property existiert nicht.");
+			Adress::addMessage("error", "Property $property existiert nicht.");
 			return "Property $property existiert nicht.";
 		}
 
@@ -59,7 +59,7 @@ class Adress extends aDatabank
 			':user_id' => $this->user_id
 		]);
 
-		SessionController::addMessage("done", "Adresse daten in DB gespeichert");
+		Adress::addMessage("done", "Adresse daten in DB gespeichert");
 	}
 
 		public function getUserAdress(int $user_id): ?array
@@ -88,7 +88,7 @@ class Adress extends aDatabank
 		$result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
 		if (!$result) {
-			SessionController::addMessage("error", "Adresse nicht gefunden");
+			Adress::addMessage("error", "Adresse nicht gefunden");
 			return null;
 		}
 
@@ -123,7 +123,7 @@ class Adress extends aDatabank
 			':id' => $id
 		]);
 
-		SessionController::addMessage("done", "Adresse aktualisiert");
+		Adress::addMessage("done", "Adresse aktualisiert");
 	}
 	function selectAll()
 	{
@@ -165,9 +165,28 @@ class Adress extends aDatabank
 	{
 		$this->stadt = $param;
 	}
-	function SetUser_id($user_id)
+	function setUser_id($param){
+		$this->user_id = $param;
+	}
+	function getUser_id()
 	{
-		$this->user_id = $user_id;
+		return $this->user_id ;
+	}
+	function getStrasse()
+	{
+		return $this->strasse ;
+	}
+	function getHaus_nr()
+	{
+		return $this->haus_nr ;
+	}
+	function getPlz()
+	{
+		return $this->plz ;
+	}
+	function getUStadt()
+	{
+		return $this->stadt ;
 	}
 
 }

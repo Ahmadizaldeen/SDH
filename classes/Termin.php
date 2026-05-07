@@ -1,12 +1,12 @@
 <?php
 namespace Classes;
 use Classes\Abstract\aDatabank;
-use Session\SessionController;
 require_once __DIR__ . "/../config/bootstrap.php";
 
 
 class Termin extends aDatabank
 {
+	use Traits\SessionController;
 	# Attribute
 	private $id;//
 	private $datum;//
@@ -24,10 +24,7 @@ class Termin extends aDatabank
 	# Methoden
 	public function __construct(array $daten = [])
 	{
-		foreach ($daten as $key => $value) {
-			$this->$key = $value;
-
-		}
+		
 		$this->db = $this->db();
 		$this->set_daten($daten);
 		
@@ -130,6 +127,54 @@ class Termin extends aDatabank
 
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
+
+	public function getTeilnehmerCount(int $termin_id): int
+{
+    $stmt = $this->db->prepare("
+        SELECT COUNT(*) as cnt
+        FROM users_termine
+        WHERE termine_id = :id
+    ");
+
+    $stmt->execute(['id' => $termin_id]);
+    $result = $stmt->fetch();
+
+    return (int)$result['cnt'];
+}
+
+public function getStatus(int $termin_id): string
+{
+    $termin = $this->select($termin_id);
+    $count = $this->getTeilnehmerCount($termin_id);
+
+    if ($count >= $termin['max_teilnehmer']) {
+        return "voll";
+    }
+
+    return "frei";
+}
+
+public function anmelden(int $user_id, int $termin_id): bool
+{
+    $termin = $this->select($termin_id);
+    $count = $this->getTeilnehmerCount($termin_id);
+
+    // 1. Check: voll?
+    if ($count >= $termin['max_teilnehmer']) {
+        return false;
+    }
+
+    // 2. Insert in Pivot
+    $stmt = $this->db->prepare("
+        INSERT INTO users_termine (user_id, termine_id)
+        VALUES (:user_id, :termin_id)
+    ");
+
+    return $stmt->execute([
+        'user_id' => $user_id,
+        'termin_id' => $termin_id
+    ]);
+}
 
 	/********************************************************************************* */
 	# Setter / Getter

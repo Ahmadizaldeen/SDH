@@ -1,8 +1,10 @@
 <?php
-namespace Classes;
-require_once __DIR__ . "/../config/bootstrap.php";
 
-class SessionController
+namespace Classes\Traits;
+require_once __DIR__ . "/../../config/bootstrap.php";
+
+trait SessionController
+ 
 {
     public static function addMessage(string $type='info', string $message): void
     {
@@ -46,4 +48,5 @@ class SessionController
         session_destroy();
     }
 }
+
 
