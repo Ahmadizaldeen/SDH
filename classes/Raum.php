@@ -45,7 +45,7 @@ class Raum extends aDatabank
 
 	function insert()
 	{
-		$sql = "INSERT INTO raum (name, standort_id)
+		$sql = "INSERT INTO raeume (name, standort_id)
             VALUES (:name, :standort_id)";
 
 		$stmt = $this->db->prepare($sql);
@@ -60,7 +60,7 @@ class Raum extends aDatabank
 
 	function select($id)
 	{
-		$sql = "SELECT * FROM raum WHERE id = :id";
+		$sql = "SELECT * FROM raeume WHERE id = :id";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute([':id' => $id]);
 
@@ -76,7 +76,7 @@ class Raum extends aDatabank
 	}
 	function delete($id)
 	{
-		$sql = "DELETE FROM raum WHERE id = :id";
+		$sql = "DELETE FROM raeume WHERE id = :id";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute([':id' => $id]);
 
@@ -84,7 +84,7 @@ class Raum extends aDatabank
 	}
 	function update($id)
 	{
-		$sql = "UPDATE raum
+		$sql = "UPDATE raeume
             SET name = :name,
                 standort_id = :standort_id
             WHERE id = :id";
@@ -101,7 +101,7 @@ class Raum extends aDatabank
 	}
 	function selectAll()
 	{
-		$sql = "SELECT * FROM raum";
+		$sql = "SELECT * FROM raeume";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute();
 

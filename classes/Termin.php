@@ -121,7 +121,7 @@ class Termin extends aDatabank
 	}
 	function selectAll()
 	{
-		$sql = "SELECT * FROM termine ORDER BY datum ASC";
+		$sql = "SELECT * FROM termine ORDER BY id DESC";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute();
 
