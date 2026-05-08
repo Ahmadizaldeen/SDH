@@ -26,8 +26,7 @@ $terminListe = array_values(array_filter($termine, function ($row) {
 
 $terminObj = new Termin();
 $loggedIn = Person::isLoggedIn();
-require_once __DIR__ ."/head.php";
-require_once __DIR__. "/navigation.php";
+
 ?>
 
 

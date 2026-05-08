@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__."/../../config/bootstrap.php";
+function get_file_name(){
+    return ucfirst(basename($_SERVER['SCRIPT_NAME'], '.php'));
+}
 $title = get_file_name();
 ?>
 <!DOCTYPE html>
@@ -9,5 +11,4 @@ $title = get_file_name();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?=$title?></title>
 	<link rel = "stylesheet" href = "<?= BASE_URL ?>/css/style.css">
-	<style></style>
 </head>
