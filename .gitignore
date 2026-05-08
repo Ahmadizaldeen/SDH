@@ -13,3 +13,4 @@ test/test_curd.php
 test/test_klass_adresse.php
 test/test_abstract_klassen.php
 test/test_set_get_dynamisch.php
+start.php

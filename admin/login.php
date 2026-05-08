@@ -1,12 +1,16 @@
 <?php
 require_once __DIR__ . '/../config/bootstrap.php';
 require_once __DIR__ . '/funktionen/admin_login.php';
-
+if ($_SESSION['admin_url']){
+     #dd($_SESSION['admin_url']);
+   
+    #dd($_SESSION['admin_url']);
 // Bereits eingeloggt → direkt zum Dashboard
 if (admin_is_logged_in()) {
     header('Location: ' . BASE_URL . '/admin/index.php');
     exit;
 }
+
 
 $fehler = '';
 
@@ -20,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $fehler = 'Benutzername oder Passwort falsch.';
     }
+}
+}
+else{
+    header('Location: ' . BASE_URL . '/pages/home.php');// zu home seite ohne das geheimnis URL
 }
 ?>
 <!DOCTYPE html>
