@@ -1,18 +1,11 @@
 <?php
 require_once __DIR__ . "/../config/bootstrap.php";
 require_once __DIR__ . "/../include/funktionen/login.php";
-
+require_once __DIR__ ."/../include/templates/head.php";
 $db = db();
 login($db);
 ?>
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login – Student Development House</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/forms.css">
-</head>
+
 <body class="sdh-page">
 <?php require_once __DIR__ . "/../include/templates/navigation.php"; ?>
 
