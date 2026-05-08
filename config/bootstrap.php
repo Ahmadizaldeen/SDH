@@ -90,9 +90,7 @@ function ok_msg($msg){
     echo "<p style='color: green;'>" . $msg . "</p>";
 
 }
-function get_file_name(){
-    return ucfirst(basename($_SERVER['SCRIPT_NAME'], '.php'));
-}
+
 
 
 ?>

@@ -6,3 +6,10 @@ data/csv/seminare.csv
 data/csv/standorte.csv
 data/csv/studenten_termine.csv
 data/csv/termine.csv
+test/class_adress_table_adresse.php
+test/debug_fehler_user_name
+test/get_id_by_email.php
+test/test_curd.php
+test/test_klass_adresse.php
+test/test_abstract_klassen.php
+test/test_set_get_dynamisch.php

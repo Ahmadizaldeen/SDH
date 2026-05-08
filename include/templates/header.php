@@ -1,4 +1,4 @@
-<?php require_once __DIR__."/../../config/bootstrap.php";
+<?php 
 $header = get_file_name();
 ?>
-<header><h1><?=$header?></h1></header>
+<header><h3><?=$header?></h3></header>
